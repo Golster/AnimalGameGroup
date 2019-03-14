@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="AnimalGameModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AnimalNames">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Animal" Type="nvarchar" MaxLength="30" />
+          <Property Name="SendingPlayer_Id" Type="int" />
+          <Property Name="ReceivingPlayer_Id" Type="int" />
+        </EntityType>
+        <EntityType Name="Games">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PublicId" Type="nvarchar" MaxLength="5" />
+          <Property Name="GameName" Type="nvarchar" MaxLength="40" />
+        </EntityType>
+        <EntityType Name="Players">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NickName" Type="nvarchar" MaxLength="40" />
+          <Property Name="Game_Id" Type="int" />
+        </EntityType>
+        <Association Name="_Game">
+          <End Role="Games" Type="Self.Games" Multiplicity="0..1" />
+          <End Role="Players" Type="Self.Players" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Games">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Players">
+              <PropertyRef Name="Game_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="_ReceivingPlayer">
+          <End Role="Players" Type="Self.Players" Multiplicity="0..1" />
+          <End Role="AnimalNames" Type="Self.AnimalNames" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Players">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AnimalNames">
+              <PropertyRef Name="ReceivingPlayer_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="_SendingPlayer">
+          <End Role="Players" Type="Self.Players" Multiplicity="0..1" />
+          <End Role="AnimalNames" Type="Self.AnimalNames" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Players">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AnimalNames">
+              <PropertyRef Name="SendingPlayer_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AnimalGameModelStoreContainer">
+          <EntitySet Name="AnimalNames" EntityType="Self.AnimalNames" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Games" EntityType="Self.Games" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Players" EntityType="Self.Players" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="_Game" Association="Self._Game">
+            <End Role="Games" EntitySet="Games" />
+            <End Role="Players" EntitySet="Players" />
+          </AssociationSet>
+          <AssociationSet Name="_ReceivingPlayer" Association="Self._ReceivingPlayer">
+            <End Role="Players" EntitySet="Players" />
+            <End Role="AnimalNames" EntitySet="AnimalNames" />
+          </AssociationSet>
+          <AssociationSet Name="_SendingPlayer" Association="Self._SendingPlayer">
+            <End Role="Players" EntitySet="Players" />
+            <End Role="AnimalNames" EntitySet="AnimalNames" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AnimalGameModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AnimalName">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Animal" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="SendingPlayer_Id" Type="Int32" />
+          <Property Name="ReceivingPlayer_Id" Type="Int32" />
+          <NavigationProperty Name="Player" Relationship="Self.C_ReceivingPlayer" FromRole="AnimalNames" ToRole="Players" />
+          <NavigationProperty Name="Player1" Relationship="Self.C_SendingPlayer" FromRole="AnimalNames" ToRole="Players" />
+        </EntityType>
+        <EntityType Name="Game">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PublicId" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="GameName" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Players" Relationship="Self.C_Game" FromRole="Games" ToRole="Players" />
+        </EntityType>
+        <EntityType Name="Player">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NickName" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="Game_Id" Type="Int32" />
+          <NavigationProperty Name="AnimalNames" Relationship="Self.C_ReceivingPlayer" FromRole="Players" ToRole="AnimalNames" />
+          <NavigationProperty Name="AnimalNames1" Relationship="Self.C_SendingPlayer" FromRole="Players" ToRole="AnimalNames" />
+          <NavigationProperty Name="Game" Relationship="Self.C_Game" FromRole="Players" ToRole="Games" />
+        </EntityType>
+        <Association Name="C_ReceivingPlayer">
+          <End Role="Players" Type="Self.Player" Multiplicity="0..1" />
+          <End Role="AnimalNames" Type="Self.AnimalName" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Players">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AnimalNames">
+              <PropertyRef Name="ReceivingPlayer_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="C_SendingPlayer">
+          <End Role="Players" Type="Self.Player" Multiplicity="0..1" />
+          <End Role="AnimalNames" Type="Self.AnimalName" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Players">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="AnimalNames">
+              <PropertyRef Name="SendingPlayer_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="C_Game">
+          <End Role="Games" Type="Self.Game" Multiplicity="0..1" />
+          <End Role="Players" Type="Self.Player" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Games">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Players">
+              <PropertyRef Name="Game_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AnimalGameGroupEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AnimalNames" EntityType="Self.AnimalName" />
+          <EntitySet Name="Games" EntityType="Self.Game" />
+          <EntitySet Name="Players" EntityType="Self.Player" />
+          <AssociationSet Name="C_ReceivingPlayer" Association="Self.C_ReceivingPlayer">
+            <End Role="Players" EntitySet="Players" />
+            <End Role="AnimalNames" EntitySet="AnimalNames" />
+          </AssociationSet>
+          <AssociationSet Name="C_SendingPlayer" Association="Self.C_SendingPlayer">
+            <End Role="Players" EntitySet="Players" />
+            <End Role="AnimalNames" EntitySet="AnimalNames" />
+          </AssociationSet>
+          <AssociationSet Name="C_Game" Association="Self.C_Game">
+            <End Role="Games" EntitySet="Games" />
+            <End Role="Players" EntitySet="Players" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="AnimalGameModelStoreContainer" CdmEntityContainer="AnimalGameGroupEntities">
+          <EntitySetMapping Name="AnimalNames">
+            <EntityTypeMapping TypeName="AnimalGameModel.AnimalName">
+              <MappingFragment StoreEntitySet="AnimalNames">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Animal" ColumnName="Animal" />
+                <ScalarProperty Name="SendingPlayer_Id" ColumnName="SendingPlayer_Id" />
+                <ScalarProperty Name="ReceivingPlayer_Id" ColumnName="ReceivingPlayer_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Games">
+            <EntityTypeMapping TypeName="AnimalGameModel.Game">
+              <MappingFragment StoreEntitySet="Games">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="PublicId" ColumnName="PublicId" />
+                <ScalarProperty Name="GameName" ColumnName="GameName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Players">
+            <EntityTypeMapping TypeName="AnimalGameModel.Player">
+              <MappingFragment StoreEntitySet="Players">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="NickName" ColumnName="NickName" />
+                <ScalarProperty Name="Game_Id" ColumnName="Game_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
