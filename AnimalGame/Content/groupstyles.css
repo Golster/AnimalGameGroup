@@ -1,0 +1,20 @@
+﻿h1 {
+    text-align: center;
+}
+
+.row {
+    margin-top: 3em;
+}
+
+.startbuttons {
+    display: flex;
+    justify-content: center;
+}
+.startbuttons a {
+    display: block;
+    width: 50%;
+    margin: 1em;
+    padding: 2em;
+    font-size: 1.2em;
+    background-color: #eee;
+ }

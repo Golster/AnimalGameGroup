@@ -52,7 +52,10 @@ namespace AnimalGame.Controllers
             {
                 db.Games.Add(game);
                 db.SaveChanges();
+                Console.WriteLine(" HALLO IN DER CREATE FUNKTION");
+
                 return RedirectToAction("Index");
+
             }
 
             return View(game);

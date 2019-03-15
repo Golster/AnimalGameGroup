@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AnimalGame.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,14 +9,48 @@ namespace AnimalGame.Controllers
 {
     public class NewGameController : Controller
     {
+
+        private AnimalGameGroupEntities db = new AnimalGameGroupEntities();
+
         // GET: NewGame
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult Create()
+        //public ActionResult Create()
+        //{
+        //    return View();
+        //}
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(DTOGame currentGame)
         {
+            if (ModelState.IsValid) { 
+
+                db.Games.Add(currentGame.GameRound); 
+                db.SaveChanges();
+
+                db.Database.ExecuteSqlCommand(
+                    "DECLARE @publicIDdb nvarchar(5)" +
+                    " DECLARE @publicIDrand nvarchar(5)" +
+                    " SET @publicIDrand = ROUND(((9999 - 1000 + 1) * RAND() + 1000), 0)" +
+                    " WHILE EXISTS (SELECT PublicId FROM dbo.Games WHERE PublicId = @publicIDrand)" +
+                    " BEGIN" +
+                    " SET @publicIDrand = ROUND(((9999 - 1000 + 1) * RAND() + 1000), 0)" +
+                    " END" +
+                    " UPDATE Games SET PublicId = @publicIDrand WHERE ID =" + currentGame.GameRound.ID
+                    );
+
+                
+
+                currentGame.CurrentPlayer.Game_Id = currentGame.GameRound.ID;
+                db.Players.Add(currentGame.CurrentPlayer);
+                db.SaveChanges();
+                    
+            }
+
             return View();
         }
 
@@ -31,20 +66,20 @@ namespace AnimalGame.Controllers
         }
 
         // POST: NewGame/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
+        //[HttpPost]
+        //public ActionResult Create(FormCollection collection)
+        //{
+        //    try
+        //    {
+        //        // TODO: Add insert logic here
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
 
         // GET: NewGame/Edit/5
         public ActionResult Edit(int id)
