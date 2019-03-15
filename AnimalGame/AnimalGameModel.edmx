@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="AnimalGameModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="AnimalGameModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AnimalNames">
           <Key>
             <PropertyRef Name="ID" />
@@ -19,7 +19,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="PublicId" Type="nvarchar" MaxLength="5" />
+          <Property Name="PublicId" Type="nvarchar" MaxLength="5" StoreGeneratedPattern="Computed" />
           <Property Name="GameName" Type="nvarchar" MaxLength="40" />
         </EntityType>
         <EntityType Name="Players">
@@ -66,6 +66,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="create_randomPublicID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="AnimalGameModelStoreContainer">
           <EntitySet Name="AnimalNames" EntityType="Self.AnimalNames" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Games" EntityType="Self.Games" Schema="dbo" store:Type="Tables" />
@@ -83,8 +84,7 @@
             <End Role="AnimalNames" EntitySet="AnimalNames" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="AnimalGameModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -104,7 +104,7 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PublicId" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="PublicId" Type="String" MaxLength="5" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="GameName" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Players" Relationship="Self.C_Game" FromRole="Games" ToRole="Players" />
         </EntityType>
@@ -171,6 +171,7 @@
             <End Role="Games" EntitySet="Games" />
             <End Role="Players" EntitySet="Players" />
           </AssociationSet>
+          <FunctionImport Name="create_randomPublicID" />
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -206,6 +207,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="create_randomPublicID" FunctionName="AnimalGameModel.Store.create_randomPublicID" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

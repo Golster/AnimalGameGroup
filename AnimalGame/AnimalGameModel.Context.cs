@@ -12,6 +12,8 @@ namespace AnimalGame
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class AnimalGameGroupEntities : DbContext
     {
@@ -28,5 +30,10 @@ namespace AnimalGame
         public virtual DbSet<AnimalName> AnimalNames { get; set; }
         public virtual DbSet<Game> Games { get; set; }
         public virtual DbSet<Player> Players { get; set; }
+    
+        public virtual int create_randomPublicID()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("create_randomPublicID");
+        }
     }
 }
