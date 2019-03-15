@@ -7,21 +7,23 @@ namespace AnimalGame.Models
 {
     public class DTOGame
     {
-        public int ID { get; set; }
-        public string PublicID { get; set; }
-        public string GameName { get; set; }
-        public string NickNameInitiator { get; set; }
+        public Game GameRound { get; set; }
 
         public Player CurrentPlayer { get; set; }
 
         public DTOGame()
         {
             CurrentPlayer = new Player();
+
+            GameRound = new Game();
         }
 
-        public DTOGame(Player player)
+
+        public DTOGame(Player player, Game game)
         {
             CurrentPlayer = player;
+
+            GameRound = game;
         }
     }
 }
